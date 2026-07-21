@@ -1,0 +1,73 @@
+name: Claude Issue Triage
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  triage:
+    # Se salta los issues que mencionan @claude: esos los maneja claude.yml,
+    # así evitamos duplicar trabajo entre workflows.
+    if: ${{ !contains(github.event.issue.body, '@claude') && !contains(github.event.issue.title, '@claude') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write        # crear/asignar etiquetas y comentar en el issue
+      id-token: write       # requerido por el OAuth de la action
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run Claude Issue Triage
+        id: claude-triage
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: >-
+            --allowed-tools "Bash(gh label list),Bash(gh label create:*),Bash(gh issue view:*),Bash(gh issue edit:*),Bash(gh issue comment:*)"
+          prompt: |
+            Eres un asistente de triage para el repositorio ${{ github.repository }}
+            (un juego de Tetris en JavaScript vanilla: los archivos principales son
+            game.js, index.html y style.css).
+
+            Se ha creado o editado el issue número ${{ github.event.issue.number }}.
+            Tu tarea es analizarlo y responder SIEMPRE en español.
+
+            Sigue estos pasos usando el CLI `gh`:
+
+            1. Lee el issue completo:
+                 gh issue view ${{ github.event.issue.number }}
+
+            2. Lista las etiquetas ya existentes en el repositorio:
+                 gh label list
+
+            3. Elige entre 1 y 3 etiquetas adecuadas para clasificar el issue.
+               - Reutiliza etiquetas existentes siempre que encajen.
+               - Si ninguna encaja, CREA una nueva etiqueta con un nombre claro, un
+                 color y una descripción, por ejemplo:
+                   gh label create bug --color d73a4a --description "Algo no funciona"
+               - Etiquetas sugeridas (créalas si no existen y son apropiadas):
+                 bug, enhancement, question, documentation, gameplay, ui.
+               - Aplica las etiquetas elegidas al issue:
+                   gh issue edit ${{ github.event.issue.number }} --add-label "etiqueta1,etiqueta2"
+
+            4. Publica UN comentario en español en el issue con un diagnóstico
+               general del problema, usando:
+                 gh issue comment ${{ github.event.issue.number }} --body "..."
+
+               El comentario debe tener esta estructura en Markdown:
+                 ## 🔎 Diagnóstico automático
+                 - **Resumen:** descripción breve del problema o solicitud.
+                 - **Tipo:** bug / mejora / pregunta / documentación.
+                 - **Áreas afectadas:** archivos o partes del código probablemente
+                   implicadas (game.js, index.html, style.css).
+                 - **Causa raíz probable:** hipótesis sobre el origen del problema.
+                 - **Enfoque sugerido:** pasos generales para implementar la solución.
+
+               Este diagnóstico servirá como base para escribir después el código de
+               la solución, así que sé concreto y accionable.
+
+            No modifiques el código del repositorio ni el cuerpo del issue; limítate a
+            asignar etiquetas y publicar el comentario de diagnóstico.
