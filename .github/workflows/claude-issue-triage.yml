@@ -57,6 +57,13 @@ jobs:
                general del problema, usando:
                  gh issue comment ${{ github.event.issue.number }} --body "..."
 
+               El comentario DEBE estar escrito en Markdown válido de GitHub
+               (GitHub Flavored Markdown), de forma que se renderice correctamente
+               en la interfaz de GitHub. Usa la sintaxis estándar: encabezados con
+               `#`, listas con `-`, negritas con `**...**`, código en línea con
+               comillas invertidas y bloques de código con triple comilla invertida.
+               No uses HTML ni formatos que GitHub no interprete.
+
                El comentario debe tener esta estructura en Markdown:
                  ## 🔎 Diagnóstico automático
                  - **Resumen:** descripción breve del problema o solicitud.
