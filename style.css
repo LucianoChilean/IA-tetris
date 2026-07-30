@@ -159,3 +159,177 @@ kbd {
 #restart-btn:hover {
   background: #9bbdff;
 }
+
+/* ---- Skins ---- */
+#skin-select {
+  width: 100%;
+  background: #1a1a25;
+  color: #e0e0e0;
+  border: 1px solid #2a2a3a;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#skin-select:focus-visible {
+  outline: 2px solid #7aa2f7;
+  outline-offset: 1px;
+}
+
+/* -- Neón -- */
+body[data-theme="neon"] {
+  background: #05050c;
+}
+
+body[data-theme="neon"] .game-title {
+  color: #00e5ff;
+  text-shadow: 0 0 14px rgba(0, 229, 255, 0.75);
+}
+
+body[data-theme="neon"] .value {
+  color: #00e5ff;
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+body[data-theme="neon"] #board,
+body[data-theme="neon"] #next-canvas {
+  border-color: #1f1f52;
+}
+
+body[data-theme="neon"] #board {
+  box-shadow: 0 0 40px rgba(0, 229, 255, 0.18);
+}
+
+body[data-theme="neon"] #skin-select {
+  background: #0b0b1c;
+  border-color: #1f1f52;
+  color: #b8f6ff;
+}
+
+body[data-theme="neon"] #restart-btn {
+  background: #00e5ff;
+  color: #05050c;
+}
+
+body[data-theme="neon"] #restart-btn:hover {
+  background: #6cf3ff;
+}
+
+body[data-theme="neon"] #overlay-score {
+  color: #00e5ff;
+}
+
+/* -- Pastel -- */
+body[data-theme="pastel"] {
+  background: #f2ede6;
+  color: #4a4458;
+}
+
+body[data-theme="pastel"] .game-title {
+  color: #8b7bb8;
+}
+
+body[data-theme="pastel"] .label {
+  color: #9b93a8;
+}
+
+body[data-theme="pastel"] .value {
+  color: #8b7bb8;
+}
+
+body[data-theme="pastel"] #board,
+body[data-theme="pastel"] #next-canvas {
+  border-color: #ddd4c8;
+}
+
+body[data-theme="pastel"] #board {
+  box-shadow: 0 0 30px rgba(120, 105, 90, 0.18);
+}
+
+body[data-theme="pastel"] .controls li {
+  color: #7d7489;
+}
+
+body[data-theme="pastel"] kbd {
+  background: #e7e0d6;
+  border-color: #d0c6b8;
+  color: #6b6377;
+}
+
+body[data-theme="pastel"] #skin-select {
+  background: #faf6f0;
+  border-color: #ddd4c8;
+  color: #4a4458;
+}
+
+body[data-theme="pastel"] .overlay {
+  background: rgba(242, 237, 230, 0.8);
+}
+
+body[data-theme="pastel"] #overlay-title {
+  color: #d98b8b;
+}
+
+body[data-theme="pastel"] #overlay-score {
+  color: #8b7bb8;
+}
+
+body[data-theme="pastel"] #restart-btn {
+  background: #b6a6dd;
+  color: #ffffff;
+}
+
+body[data-theme="pastel"] #restart-btn:hover {
+  background: #c8bbe8;
+}
+
+/* -- Pixel art -- */
+body[data-theme="pixel"] {
+  background: #0b0b12;
+}
+
+body[data-theme="pixel"] .game-title,
+body[data-theme="pixel"] .value,
+body[data-theme="pixel"] #overlay-score,
+body[data-theme="pixel"] #skin-select,
+body[data-theme="pixel"] #restart-btn {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+body[data-theme="pixel"] .game-title {
+  color: #ffc400;
+}
+
+body[data-theme="pixel"] .value {
+  color: #ffc400;
+}
+
+body[data-theme="pixel"] #board,
+body[data-theme="pixel"] #next-canvas {
+  border-color: #3a3a4d;
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] #skin-select {
+  background: #12121c;
+  border-color: #3a3a4d;
+  border-radius: 0;
+  color: #ffd76b;
+}
+
+body[data-theme="pixel"] #restart-btn {
+  background: #ffc400;
+  color: #12121c;
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] #restart-btn:hover {
+  background: #ffd76b;
+}
+
+body[data-theme="pixel"] #overlay-score {
+  color: #ffc400;
+}
