@@ -634,3 +634,234 @@ body[data-theme="pixel"] #overlay-score {
   background: #e57373;
   color: #0f0f17;
 }
+
+/* ---- Skins aplicadas al menú de pausa y a los records ----
+   Las skins se escribieron cuando sólo existía la UI original, así que estos
+   paneles quedaban con la paleta oscura por defecto. En «pastel» (tema claro)
+   eso dejaba texto oscuro sobre fondo oscuro: ilegible, no sólo discordante. */
+
+/* -- Neón -- */
+body[data-theme="neon"] .pause-box,
+body[data-theme="neon"] .records-panel {
+  background: rgba(11, 11, 28, 0.94);
+  border-color: #1f1f52;
+}
+
+body[data-theme="neon"] #pause-title,
+body[data-theme="neon"] .hs-agg,
+body[data-theme="neon"] #start-level {
+  color: #00e5ff;
+}
+
+body[data-theme="neon"] .pause-btn,
+body[data-theme="neon"] #start-level,
+body[data-theme="neon"] #name-input {
+  background: #0b0b1c;
+  border-color: #1f1f52;
+  color: #b8f6ff;
+}
+
+body[data-theme="neon"] .pause-btn:hover {
+  background: #00e5ff;
+  color: #05050c;
+}
+
+body[data-theme="neon"] .pause-btn:focus-visible,
+body[data-theme="neon"] #name-input:focus {
+  outline-color: #00e5ff;
+  border-color: #00e5ff;
+}
+
+body[data-theme="neon"] #resume-btn,
+body[data-theme="neon"] #play-btn,
+body[data-theme="neon"] #save-score-btn {
+  background: #00e5ff;
+  border-color: #00e5ff;
+  color: #05050c;
+}
+
+body[data-theme="neon"] #resume-btn:hover,
+body[data-theme="neon"] #play-btn:hover,
+body[data-theme="neon"] #save-score-btn:hover {
+  background: #6cf3ff;
+}
+
+body[data-theme="neon"] #menu-btn {
+  color: #00e5ff;
+  border-color: #1f1f52;
+}
+
+body[data-theme="neon"] .hs-row.hs-highlight {
+  background: rgba(0, 229, 255, 0.16);
+  color: #00e5ff;
+}
+
+/* -- Pastel -- */
+body[data-theme="pastel"] .pause-box,
+body[data-theme="pastel"] .records-panel {
+  background: rgba(250, 246, 240, 0.96);
+  border-color: #ddd4c8;
+  color: #4a4458;
+}
+
+body[data-theme="pastel"] .pause-controls,
+body[data-theme="pastel"] .pause-level,
+body[data-theme="pastel"] .hs-aggregates {
+  border-top-color: #ddd4c8;
+}
+
+body[data-theme="pastel"] #pause-title,
+body[data-theme="pastel"] .hs-agg,
+body[data-theme="pastel"] #start-level {
+  color: #8b7bb8;
+}
+
+body[data-theme="pastel"] .hs-row.hs-head,
+body[data-theme="pastel"] .hs-empty,
+body[data-theme="pastel"] .hs-summary,
+body[data-theme="pastel"] .pause-hint,
+body[data-theme="pastel"] .pause-controls li {
+  color: #9b93a8;
+}
+
+body[data-theme="pastel"] .hs-row.hs-highlight {
+  background: rgba(139, 123, 184, 0.18);
+  color: #6b5f96;
+}
+
+/* #ffd54f no tiene contraste suficiente sobre fondo claro */
+body[data-theme="pastel"] .hs-new {
+  color: #b07d1a;
+}
+
+body[data-theme="pastel"] .pause-btn,
+body[data-theme="pastel"] #start-level,
+body[data-theme="pastel"] #name-input {
+  background: #f2ede6;
+  border-color: #d0c6b8;
+  color: #4a4458;
+}
+
+body[data-theme="pastel"] .pause-btn:hover {
+  background: #b6a6dd;
+  color: #ffffff;
+}
+
+body[data-theme="pastel"] .pause-btn:focus-visible {
+  outline-color: #8b7bb8;
+}
+
+body[data-theme="pastel"] #name-input:focus {
+  border-color: #8b7bb8;
+}
+
+body[data-theme="pastel"] #resume-btn,
+body[data-theme="pastel"] #play-btn,
+body[data-theme="pastel"] #save-score-btn {
+  background: #b6a6dd;
+  border-color: #b6a6dd;
+  color: #ffffff;
+}
+
+body[data-theme="pastel"] #resume-btn:hover,
+body[data-theme="pastel"] #play-btn:hover,
+body[data-theme="pastel"] #save-score-btn:hover {
+  background: #c8bbe8;
+}
+
+body[data-theme="pastel"] #save-score-btn:disabled {
+  background: #ddd7cd;
+  color: #9b93a8;
+}
+
+body[data-theme="pastel"] #menu-btn {
+  color: #8b7bb8;
+  border-color: #d0c6b8;
+}
+
+body[data-theme="pastel"] #menu-btn:hover {
+  background: rgba(139, 123, 184, 0.15);
+}
+
+body[data-theme="pastel"] #reset-records-btn {
+  color: #c25f5f;
+  border-color: #dda3a3;
+}
+
+body[data-theme="pastel"] #reset-records-btn.hs-armed {
+  background: #c25f5f;
+  color: #ffffff;
+}
+
+/* -- Pixel art -- */
+body[data-theme="pixel"] .pause-box,
+body[data-theme="pixel"] .records-panel {
+  background: rgba(18, 18, 28, 0.95);
+  border-color: #3a3a4d;
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] #pause-title,
+body[data-theme="pixel"] .hs-agg,
+body[data-theme="pixel"] #start-level {
+  color: #ffc400;
+}
+
+body[data-theme="pixel"] #pause-title,
+body[data-theme="pixel"] .pause-btn,
+body[data-theme="pixel"] #play-btn,
+body[data-theme="pixel"] #menu-btn,
+body[data-theme="pixel"] #save-score-btn,
+body[data-theme="pixel"] #reset-records-btn {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+body[data-theme="pixel"] .pause-btn,
+body[data-theme="pixel"] #start-level,
+body[data-theme="pixel"] #name-input {
+  background: #12121c;
+  border-color: #3a3a4d;
+  border-radius: 0;
+  color: #ffd76b;
+}
+
+body[data-theme="pixel"] .pause-btn:hover {
+  background: #ffc400;
+  color: #12121c;
+}
+
+body[data-theme="pixel"] .pause-btn:focus-visible,
+body[data-theme="pixel"] #name-input:focus {
+  outline-color: #ffc400;
+  border-color: #ffc400;
+}
+
+body[data-theme="pixel"] #resume-btn,
+body[data-theme="pixel"] #play-btn,
+body[data-theme="pixel"] #save-score-btn {
+  background: #ffc400;
+  border-color: #ffc400;
+  color: #12121c;
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] #resume-btn:hover,
+body[data-theme="pixel"] #play-btn:hover,
+body[data-theme="pixel"] #save-score-btn:hover {
+  background: #ffd76b;
+}
+
+body[data-theme="pixel"] #menu-btn {
+  color: #ffc400;
+  border-color: #3a3a4d;
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] #reset-records-btn {
+  border-radius: 0;
+}
+
+body[data-theme="pixel"] .hs-row.hs-highlight {
+  background: rgba(255, 196, 0, 0.18);
+  color: #ffc400;
+}
