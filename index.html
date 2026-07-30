@@ -58,6 +58,25 @@
       <div class="overlay-box">
         <p id="overlay-title">GAME OVER</p>
         <p id="overlay-score"></p>
+
+        <div id="go-records" class="records-panel hidden">
+          <p id="go-summary" class="hs-summary"></p>
+          <p id="new-record-msg" class="hs-new hidden">¡Nuevo record!</p>
+          <div id="save-row" class="hs-save hidden">
+            <input id="name-input" type="text" maxlength="12" value="Jugador" aria-label="Nombre" />
+            <button id="save-score-btn">Guardar</button>
+          </div>
+          <span class="label">RECORDS</span>
+          <div id="go-records-table" class="hs-table"></div>
+          <div class="hs-aggregates">
+            <span class="label">MEJOR COMBO</span>
+            <span class="hs-agg" id="go-best-combo">0</span>
+            <span class="label">LÍNEAS MÁXIMAS</span>
+            <span class="hs-agg" id="go-best-lines">0</span>
+          </div>
+          <button id="menu-btn">Inicio</button>
+        </div>
+
         <button id="restart-btn">Reiniciar</button>
       </div>
     </div>
@@ -87,6 +106,23 @@
           <select id="start-level"></select>
           <p class="pause-hint">Se aplica en la próxima partida</p>
         </div>
+      </div>
+    </div>
+
+    <div id="start-overlay" class="overlay">
+      <div class="overlay-box">
+        <div class="records-panel">
+          <span class="label">MEJORES PUNTUACIONES</span>
+          <div id="start-records" class="hs-table"></div>
+          <div class="hs-aggregates">
+            <span class="label">MEJOR COMBO</span>
+            <span class="hs-agg" id="start-best-combo">0</span>
+            <span class="label">LÍNEAS MÁXIMAS</span>
+            <span class="hs-agg" id="start-best-lines">0</span>
+          </div>
+        </div>
+        <button id="play-btn">Jugar</button>
+        <button id="reset-records-btn">Resetear records</button>
       </div>
     </div>
   </div>
