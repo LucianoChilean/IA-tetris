@@ -156,11 +156,34 @@ function updateHUD() {
   levelEl.textContent = level;
 }
 
-function drawBlock(context, x, y, colorIndex, size, alpha) {
-  if (!colorIndex) return;
-  const color = COLORS[colorIndex];
-  context.globalAlpha = alpha ?? 1;
-  context.fillStyle = color;
+/* ---- Skins / temas visuales ---- */
+
+const SKIN_STORAGE_KEY = 'tetris.skin';
+const DEFAULT_SKIN = 'retro';
+
+// Aclara (amount > 0) u oscurece (amount < 0) un color '#rrggbb'.
+function shadeHex(hex, amount) {
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) & 255;
+  let g = (n >> 8) & 255;
+  let b = n & 255;
+  if (amount >= 0) {
+    r += (255 - r) * amount;
+    g += (255 - g) * amount;
+    b += (255 - b) * amount;
+  } else {
+    r *= 1 + amount;
+    g *= 1 + amount;
+    b *= 1 + amount;
+  }
+  const hx = v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0');
+  return '#' + hx(r) + hx(g) + hx(b);
+}
+
+// --- Retro: exactamente el aspecto original (cuadrados planos) ---
+function drawBlockRetro(context, x, y, colorIndex, size, alpha, colors) {
+  context.globalAlpha = alpha;
+  context.fillStyle = colors[colorIndex];
   context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
   // highlight
   context.fillStyle = 'rgba(255,255,255,0.12)';
@@ -168,8 +191,236 @@ function drawBlock(context, x, y, colorIndex, size, alpha) {
   context.globalAlpha = 1;
 }
 
+// --- Neon: tubo de neón con glow ---
+function drawBlockNeon(context, x, y, colorIndex, size, alpha, colors) {
+  const color = colors[colorIndex];
+  const px = x * size + 2;
+  const py = y * size + 2;
+  const s = size - 4;
+  context.globalAlpha = alpha;
+  context.shadowColor = color;
+  context.shadowBlur = Math.max(6, size * 0.4);
+  context.fillStyle = color;
+  context.fillRect(px, py, s, s);
+  context.shadowBlur = 0;
+  context.shadowColor = 'transparent';
+  // núcleo oscuro para que se lea como un tubo hueco
+  context.fillStyle = 'rgba(5, 5, 12, 0.6)';
+  context.fillRect(px + 3, py + 3, s - 6, s - 6);
+  context.globalAlpha = 1;
+}
+
+// --- Pastel: paleta suave con esquinas redondeadas ---
+function drawBlockPastel(context, x, y, colorIndex, size, alpha, colors) {
+  const px = x * size + 1.5;
+  const py = y * size + 1.5;
+  const s = size - 3;
+  const radius = Math.max(2, s * 0.24);
+  const rounded = typeof context.roundRect === 'function';
+  context.globalAlpha = alpha;
+  context.fillStyle = colors[colorIndex];
+  if (rounded) {
+    context.beginPath();
+    context.roundRect(px, py, s, s, radius);
+    context.fill();
+  } else {
+    context.fillRect(px, py, s, s);
+  }
+  // brillo superior suave
+  const hx = px + s * 0.18;
+  const hy = py + s * 0.16;
+  const hw = s * 0.64;
+  const hh = Math.max(2, s * 0.15);
+  context.fillStyle = 'rgba(255,255,255,0.55)';
+  if (rounded) {
+    context.beginPath();
+    context.roundRect(hx, hy, hw, hh, hh / 2);
+    context.fill();
+  } else {
+    context.fillRect(hx, hy, hw, hh);
+  }
+  context.globalAlpha = 1;
+}
+
+// --- Pixel art: textura de dither cacheada como patrón ---
+const pixelTiles = [];
+const pixelPatterns = new WeakMap();
+
+function pixelTile(colorIndex, colors) {
+  let tile = pixelTiles[colorIndex];
+  if (tile) return tile;
+  const base = colors[colorIndex];
+  tile = document.createElement('canvas');
+  tile.width = 6;
+  tile.height = 6;
+  const tc = tile.getContext('2d');
+  tc.fillStyle = base;
+  tc.fillRect(0, 0, 6, 6);
+  tc.fillStyle = shadeHex(base, 0.22);
+  tc.fillRect(0, 0, 3, 3);
+  tc.fillStyle = shadeHex(base, -0.22);
+  tc.fillRect(3, 3, 3, 3);
+  pixelTiles[colorIndex] = tile;
+  return tile;
+}
+
+function pixelPattern(context, colorIndex, colors) {
+  let cache = pixelPatterns.get(context);
+  if (!cache) {
+    cache = [];
+    pixelPatterns.set(context, cache);
+  }
+  if (!cache[colorIndex]) {
+    cache[colorIndex] = context.createPattern(pixelTile(colorIndex, colors), 'repeat');
+  }
+  return cache[colorIndex];
+}
+
+function drawBlockPixel(context, x, y, colorIndex, size, alpha, colors) {
+  const base = colors[colorIndex];
+  const px = x * size + 1;
+  const py = y * size + 1;
+  const s = size - 2;
+  context.globalAlpha = alpha;
+  const pattern = pixelPattern(context, colorIndex, colors);
+  context.fillStyle = pattern || base;
+  context.fillRect(px, py, s, s);
+  // borde oscuro + luces de 3px estilo sprite
+  context.fillStyle = shadeHex(base, -0.5);
+  context.fillRect(px, py, s, 3);
+  context.fillRect(px, py, 3, s);
+  context.fillStyle = shadeHex(base, 0.45);
+  context.fillRect(px + 3, py + 3, s - 6, 3);
+  context.fillRect(px + 3, py + 3, 3, s - 6);
+  context.fillStyle = shadeHex(base, -0.35);
+  context.fillRect(px, py + s - 3, s, 3);
+  context.fillRect(px + s - 3, py, 3, s);
+  context.globalAlpha = 1;
+}
+
+const THEMES = {
+  retro: {
+    label: 'Retro',
+    colors: COLORS,
+    grid: '#22222e',
+    bg: '#1a1a25',
+    drawBlock: drawBlockRetro,
+  },
+  neon: {
+    label: 'Neón',
+    colors: [
+      null,
+      '#00e5ff', // I
+      '#ffe600', // O
+      '#d500f9', // T
+      '#00ff85', // S
+      '#ff1e56', // Z
+      '#3d5afe', // J
+      '#ff9100', // L
+    ],
+    grid: '#16163a',
+    bg: '#05050c',
+    drawBlock: drawBlockNeon,
+  },
+  pastel: {
+    label: 'Pastel',
+    colors: [
+      null,
+      '#9fd8dd', // I
+      '#f7e3a1', // O
+      '#d3b8ea', // T
+      '#b3e2c2', // S
+      '#f4b8b8', // Z
+      '#b6c4ef', // J
+      '#f7cba4', // L
+    ],
+    grid: '#e6ded3',
+    bg: '#faf6f0',
+    drawBlock: drawBlockPastel,
+  },
+  pixel: {
+    label: 'Pixel art',
+    colors: [
+      null,
+      '#00b8d4', // I
+      '#ffc400', // O
+      '#9c27b0', // T
+      '#00c853', // S
+      '#e53935', // Z
+      '#2962ff', // J
+      '#ff6d00', // L
+    ],
+    grid: '#262633',
+    bg: '#12121c',
+    drawBlock: drawBlockPixel,
+  },
+};
+
+let currentSkin = DEFAULT_SKIN;
+
+function isKnownSkin(name) {
+  return typeof name === 'string' && Object.prototype.hasOwnProperty.call(THEMES, name);
+}
+
+function activeTheme() {
+  return THEMES[currentSkin] || THEMES[DEFAULT_SKIN];
+}
+
+function readStoredSkin() {
+  try {
+    const stored = localStorage.getItem(SKIN_STORAGE_KEY);
+    if (isKnownSkin(stored)) return stored;
+  } catch (e) {
+    /* localStorage no disponible (modo privado / deshabilitado) */
+  }
+  return DEFAULT_SKIN;
+}
+
+function storeSkin(name) {
+  try {
+    localStorage.setItem(SKIN_STORAGE_KEY, name);
+  } catch (e) {
+    /* sin persistencia: el tema sigue aplicándose en esta sesión */
+  }
+}
+
+function redrawSkin() {
+  if (!board || !current) return;
+  draw();
+  if (next) drawNext();
+}
+
+function applySkin(name) {
+  currentSkin = isKnownSkin(name) ? name : DEFAULT_SKIN;
+  const theme = THEMES[currentSkin];
+  document.body.dataset.theme = currentSkin;
+  canvas.style.background = theme.bg;
+  nextCanvas.style.background = theme.bg;
+  redrawSkin();
+}
+
+const skinSelect = document.getElementById('skin-select');
+if (skinSelect) {
+  skinSelect.addEventListener('change', () => {
+    applySkin(skinSelect.value);
+    storeSkin(currentSkin);
+    skinSelect.value = currentSkin;
+  });
+}
+
+applySkin(readStoredSkin());
+if (skinSelect) skinSelect.value = currentSkin;
+
+/* ---- Fin skins ---- */
+
+function drawBlock(context, x, y, colorIndex, size, alpha) {
+  if (!colorIndex) return;
+  const theme = activeTheme();
+  theme.drawBlock(context, x, y, colorIndex, size, alpha ?? 1, theme.colors);
+}
+
 function drawGrid() {
-  ctx.strokeStyle = '#22222e';
+  ctx.strokeStyle = activeTheme().grid;
   ctx.lineWidth = 0.5;
   for (let c = 1; c < COLS; c++) {
     ctx.beginPath();
